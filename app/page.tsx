@@ -57,7 +57,12 @@ async function getProducts(): Promise<Product[]> {
                   secondaryImage: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1000&auto=format&fit=crop',
                 },
               ]),
-          sizes: Array.from(new Set(p.variants.map((v) => v.size.replace('_', ' ')))),
+          sizes: (() => {
+            const variantSizes = Array.from(new Set(p.variants.map((v) => v.size.replace('_', ' ')))).filter(Boolean);
+            if (variantSizes.length > 0) return variantSizes;
+            const fallbackProd = PRODUCTS.find((prod) => prod.id === p.id);
+            return fallbackProd?.sizes && fallbackProd.sizes.length > 0 ? fallbackProd.sizes : ['XS', 'S', 'M', 'L', 'XL'];
+          })(),
         };
       });
     }
