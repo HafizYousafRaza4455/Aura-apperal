@@ -409,10 +409,14 @@ export const AdminPanel: React.FC = () => {
                     <div className="relative flex-1">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#707070]" />
                       <input
-                        type="text"
+                        id="admin-product-search"
+                        name="productSearch"
+                        type="search"
+                        autoComplete="off"
                         value={productSearch}
                         onChange={(e) => setProductSearch(e.target.value)}
                         placeholder="Search editions by title or subtitle..."
+                        aria-label="Search editions by title or subtitle"
                         className="w-full pl-9 pr-3 py-2 text-xs border border-[#E5E5E5] bg-white focus:outline-none focus:border-[#0D0D0D] rounded-none"
                       />
                     </div>
@@ -638,10 +642,12 @@ export const AdminPanel: React.FC = () => {
 
             <form onSubmit={handleSaveProduct} className="space-y-4">
               <div>
-                <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
+                <label htmlFor="admin-product-title" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
                   Title
                 </label>
                 <input
+                  id="admin-product-title"
+                  name="title"
                   required
                   type="text"
                   value={productForm.title}
@@ -652,10 +658,12 @@ export const AdminPanel: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
+                <label htmlFor="admin-product-subtitle" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
                   Subtitle
                 </label>
                 <input
+                  id="admin-product-subtitle"
+                  name="subtitle"
                   required
                   type="text"
                   value={productForm.subtitle}
@@ -667,10 +675,12 @@ export const AdminPanel: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
+                  <label htmlFor="admin-product-price" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
                     Price (USD)
                   </label>
                   <input
+                    id="admin-product-price"
+                    name="price"
                     required
                     type="number"
                     min="1"
@@ -680,10 +690,12 @@ export const AdminPanel: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
+                  <label htmlFor="admin-product-stock" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
                     Stock Units
                   </label>
                   <input
+                    id="admin-product-stock"
+                    name="stock"
                     required
                     type="number"
                     min="0"
@@ -696,10 +708,12 @@ export const AdminPanel: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
+                  <label htmlFor="admin-product-category" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
                     Movement Category
                   </label>
                   <select
+                    id="admin-product-category"
+                    name="category"
                     value={productForm.category}
                     onChange={(e) => setProductForm({ ...productForm, category: e.target.value as Category })}
                     className="w-full px-3 py-2 text-xs border border-[#E5E5E5] focus:outline-none focus:border-[#0D0D0D] bg-[#FBF9F9]"
@@ -710,10 +724,12 @@ export const AdminPanel: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
+                  <label htmlFor="admin-product-badge" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
                     Luxury Badge
                   </label>
                   <select
+                    id="admin-product-badge"
+                    name="badge"
                     value={productForm.badge}
                     onChange={(e) => setProductForm({ ...productForm, badge: e.target.value as ProductBadge | '' })}
                     className="w-full px-3 py-2 text-xs border border-[#E5E5E5] focus:outline-none focus:border-[#0D0D0D] bg-[#FBF9F9]"
@@ -728,10 +744,12 @@ export const AdminPanel: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
+                <label htmlFor="admin-product-image-url" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
                   Image URL
                 </label>
                 <input
+                  id="admin-product-image-url"
+                  name="imageUrl"
                   required
                   type="url"
                   value={productForm.imageUrl}
@@ -742,10 +760,12 @@ export const AdminPanel: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
+                <label htmlFor="admin-product-description" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">
                   Description
                 </label>
                 <textarea
+                  id="admin-product-description"
+                  name="description"
                   rows={3}
                   value={productForm.description}
                   onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}

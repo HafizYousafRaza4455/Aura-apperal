@@ -214,12 +214,15 @@ function AtelierAdminLoginContent() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-[10px] uppercase font-mono tracking-widest text-[#A3A3A3] mb-2">
+              <label htmlFor="atelier-master-passcode" className="block text-[10px] uppercase font-mono tracking-widest text-[#A3A3A3] mb-2">
                 Executive Master Passcode
               </label>
               <div className="relative">
                 <input
+                  id="atelier-master-passcode"
+                  name="passcode"
                   type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
                   required
                   disabled={isLocked || isLoading}
                   placeholder="Enter authorized password..."

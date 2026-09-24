@@ -116,13 +116,16 @@ function AdminLoginForm() {
         {/* Credentials Form */}
         <form onSubmit={handleLogin} className="space-y-5">
           <div className="space-y-1.5">
-            <label className="block text-[11px] font-sans uppercase tracking-[0.2em] text-[#A3A3A3]">
+            <label htmlFor="admin-login-email" className="block text-[11px] font-sans uppercase tracking-[0.2em] text-[#A3A3A3]">
               Staff Identifier (Email)
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-[#707070] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
+                id="admin-login-email"
+                name="email"
                 type="email"
+                autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -133,13 +136,16 @@ function AdminLoginForm() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="block text-[11px] font-sans uppercase tracking-[0.2em] text-[#A3A3A3]">
+            <label htmlFor="admin-login-password" className="block text-[11px] font-sans uppercase tracking-[0.2em] text-[#A3A3A3]">
               Encrypted Passphrase
             </label>
             <div className="relative">
               <Lock className="w-4 h-4 text-[#707070] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
+                id="admin-login-password"
+                name="password"
                 type="password"
+                autoComplete="current-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

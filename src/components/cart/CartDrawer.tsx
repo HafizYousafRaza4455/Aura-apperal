@@ -401,7 +401,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                   <div className="relative flex-1">
                     <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#707070]" aria-hidden="true" />
                     <input
+                      id="cart-promo-code"
+                      name="promoCode"
                       type="text"
+                      autoComplete="off"
                       value={promoInput}
                       onChange={(e) => {
                         setPromoInput(e.target.value.toUpperCase());
@@ -539,8 +542,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Full Name</label>
+                      <label htmlFor="drawer-full-name" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Full Name</label>
                       <input
+                        id="drawer-full-name"
+                        name="name"
+                        autoComplete="name"
                         required
                         type="text"
                         value={formData.name}
@@ -549,8 +555,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Email Address</label>
+                      <label htmlFor="drawer-email-address" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Email Address</label>
                       <input
+                        id="drawer-email-address"
+                        name="email"
+                        autoComplete="email"
                         required
                         type="email"
                         value={formData.email}
@@ -561,8 +570,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                   </div>
 
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Street Address</label>
+                    <label htmlFor="drawer-street-address" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Street Address</label>
                     <input
+                      id="drawer-street-address"
+                      name="address"
+                      autoComplete="street-address"
                       required
                       type="text"
                       value={formData.address}
@@ -573,8 +585,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
 
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">City</label>
+                      <label htmlFor="drawer-city" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">City</label>
                       <input
+                        id="drawer-city"
+                        name="city"
+                        autoComplete="address-level2"
                         required
                         type="text"
                         value={formData.city}
@@ -583,8 +598,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Country</label>
+                      <label htmlFor="drawer-country" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Country</label>
                       <input
+                        id="drawer-country"
+                        name="country"
+                        autoComplete="country-name"
                         required
                         type="text"
                         value={formData.country}
@@ -593,8 +611,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Postal Code</label>
+                      <label htmlFor="drawer-postal-code" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Postal Code</label>
                       <input
+                        id="drawer-postal-code"
+                        name="postalCode"
+                        autoComplete="postal-code"
                         required
                         type="text"
                         value={formData.zip}
@@ -630,8 +651,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
 
                   <div className="p-4 bg-[#FBF9F9] border border-[#E5E5E5] space-y-3">
                     <div>
-                      <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Card Number</label>
+                      <label htmlFor="drawer-card-number" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Card Number</label>
                       <input
+                        id="drawer-card-number"
+                        name="cardNumber"
+                        autoComplete="cc-number"
                         required
                         type="text"
                         value={formData.cardNumber}
@@ -642,8 +666,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
 
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Expiry Date</label>
+                        <label htmlFor="drawer-card-expiry" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">Expiry Date</label>
                         <input
+                          id="drawer-card-expiry"
+                          name="cardExpiry"
+                          autoComplete="cc-exp"
                           required
                           type="text"
                           value={formData.cardExpiry}
@@ -652,8 +679,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">CVC Code</label>
+                        <label htmlFor="drawer-card-cvc" className="block text-[11px] uppercase tracking-wider font-semibold text-[#0D0D0D] mb-1">CVC Code</label>
                         <input
+                          id="drawer-card-cvc"
+                          name="cardCvc"
+                          autoComplete="cc-csc"
                           required
                           type="text"
                           value={formData.cardCvc}

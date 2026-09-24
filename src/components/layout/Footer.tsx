@@ -130,7 +130,10 @@ export const Footer: React.FC<FooterProps> = ({
               <form onSubmit={handleSubscribe} noValidate className="w-full">
                 <div className="flex flex-col sm:flex-row gap-0">
                   <input
+                    id="newsletter-email"
+                    name="email"
                     type="email"
+                    autoComplete="email"
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);

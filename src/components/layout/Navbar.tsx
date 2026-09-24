@@ -172,12 +172,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               <>
                 <span
                   data-testid="cart-badge"
+                  suppressHydrationWarning
                   className="absolute -top-1 -right-1 bg-[#0D0D0D] text-[#FBF9F9] text-[10px] font-sans font-medium px-1.5 min-w-[18px] h-[18px] flex items-center justify-center border border-[#E5E5E5] rounded-none"
                 >
-                  <span data-testid="cart-count-badge">{cartCount}</span>
+                  <span data-testid="cart-count-badge" suppressHydrationWarning>{cartCount}</span>
                 </span>
                 <span
                   data-testid="cart-gold-dot"
+                  suppressHydrationWarning
                   className="absolute top-1 right-1 w-2 h-2 bg-[#D4AF37] ring-2 ring-[#FBF9F9] rounded-full"
                   aria-hidden="true"
                 />

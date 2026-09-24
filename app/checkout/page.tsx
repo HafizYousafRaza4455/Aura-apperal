@@ -55,8 +55,11 @@ function CheckoutContent() {
     cardCvc: '•••',
   });
 
-  // Load cart from localStorage
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Load cart from localStorage & set mounted flag
   useEffect(() => {
+    setIsMounted(true);
     try {
       const savedCart = localStorage.getItem('aura_cart');
       if (savedCart) {
@@ -220,7 +223,7 @@ function CheckoutContent() {
           </div>
           <div className="flex items-center gap-2 font-mono text-[#D4AF37] font-semibold bg-[#111111] px-3 py-1 border border-[#333333]">
             <Clock className="w-3.5 h-3.5" />
-            <span>HOLD EXPIRES: {formatTimer(secondsRemaining)}</span>
+            <span suppressHydrationWarning>HOLD EXPIRES: {formatTimer(secondsRemaining)}</span>
           </div>
         </div>
       </div>
@@ -246,12 +249,14 @@ function CheckoutContent() {
                 </h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                    <label htmlFor="checkout-email" className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
                       Email Address for Order Conformation & Tracking
                     </label>
                     <input
+                      id="checkout-email"
                       type="email"
                       name="email"
+                      autoComplete="email"
                       required
                       placeholder="client@luxury.com"
                       value={formData.email}
@@ -270,12 +275,14 @@ function CheckoutContent() {
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                    <label htmlFor="checkout-first-name" className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
                       First Name
                     </label>
                     <input
+                      id="checkout-first-name"
                       type="text"
                       name="firstName"
+                      autoComplete="given-name"
                       required
                       placeholder="Victoria"
                       value={formData.firstName}
@@ -284,12 +291,14 @@ function CheckoutContent() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                    <label htmlFor="checkout-last-name" className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
                       Last Name
                     </label>
                     <input
+                      id="checkout-last-name"
                       type="text"
                       name="lastName"
+                      autoComplete="family-name"
                       required
                       placeholder="Sterling"
                       value={formData.lastName}
@@ -298,12 +307,14 @@ function CheckoutContent() {
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                    <label htmlFor="checkout-address" className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
                       Street Address & Suite / Residence
                     </label>
                     <input
+                      id="checkout-address"
                       type="text"
                       name="address"
+                      autoComplete="street-address"
                       required
                       placeholder="740 Park Avenue, Penthouse B"
                       value={formData.address}
@@ -312,12 +323,14 @@ function CheckoutContent() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                    <label htmlFor="checkout-city" className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
                       City
                     </label>
                     <input
+                      id="checkout-city"
                       type="text"
                       name="city"
+                      autoComplete="address-level2"
                       required
                       placeholder="New York"
                       value={formData.city}
@@ -326,12 +339,14 @@ function CheckoutContent() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                    <label htmlFor="checkout-postal-code" className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
                       Postal Code / Zip
                     </label>
                     <input
+                      id="checkout-postal-code"
                       type="text"
                       name="postalCode"
+                      autoComplete="postal-code"
                       required
                       placeholder="10021"
                       value={formData.postalCode}
@@ -350,6 +365,7 @@ function CheckoutContent() {
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <label
+                    htmlFor="shipping-white-glove"
                     className={`p-4 border cursor-pointer transition-colors block ${
                       formData.shippingMethod === 'white-glove'
                         ? 'border-[#D4AF37] bg-[#1A1A1A]'
@@ -357,6 +373,7 @@ function CheckoutContent() {
                     }`}
                   >
                     <input
+                      id="shipping-white-glove"
                       type="radio"
                       name="shippingMethod"
                       value="white-glove"
@@ -376,6 +393,7 @@ function CheckoutContent() {
                   </label>
 
                   <label
+                    htmlFor="shipping-express"
                     className={`p-4 border cursor-pointer transition-colors block ${
                       formData.shippingMethod === 'express'
                         ? 'border-[#D4AF37] bg-[#1A1A1A]'
@@ -383,6 +401,7 @@ function CheckoutContent() {
                     }`}
                   >
                     <input
+                      id="shipping-express"
                       type="radio"
                       name="shippingMethod"
                       value="express"
@@ -405,10 +424,11 @@ function CheckoutContent() {
 
               {/* Bespoke Tailoring & Alteration Notes */}
               <div>
-                <label className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
+                <label htmlFor="checkout-tailoring-notes" className="block text-[11px] uppercase tracking-wider text-[#A3A3A3] mb-1.5">
                   Bespoke Atelier Instructions (Optional)
                 </label>
                 <textarea
+                  id="checkout-tailoring-notes"
                   name="tailoringNotes"
                   rows={2}
                   placeholder="E.g., Custom sleeve hem -1.5cm, monogramming initials E.V. in pale gold..."
@@ -441,36 +461,42 @@ function CheckoutContent() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
                     <div className="sm:col-span-3">
-                      <label className="block text-[10px] uppercase tracking-wider text-[#888888] mb-1">
+                      <label htmlFor="checkout-card-number" className="block text-[10px] uppercase tracking-wider text-[#888888] mb-1">
                         Card Number
                       </label>
                       <input
+                        id="checkout-card-number"
                         type="text"
                         name="cardNumber"
+                        autoComplete="cc-number"
                         value={formData.cardNumber}
                         onChange={handleInputChange}
                         className="w-full bg-[#1A1A1A] border border-[#333333] px-3.5 py-2.5 text-sm font-mono text-[#FBF9F9] outline-none"
                       />
                     </div>
                     <div className="sm:col-span-2">
-                      <label className="block text-[10px] uppercase tracking-wider text-[#888888] mb-1">
+                      <label htmlFor="checkout-card-expiry" className="block text-[10px] uppercase tracking-wider text-[#888888] mb-1">
                         Expires
                       </label>
                       <input
+                        id="checkout-card-expiry"
                         type="text"
                         name="cardExpiry"
+                        autoComplete="cc-exp"
                         value={formData.cardExpiry}
                         onChange={handleInputChange}
                         className="w-full bg-[#1A1A1A] border border-[#333333] px-3.5 py-2.5 text-sm font-mono text-[#FBF9F9] outline-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] uppercase tracking-wider text-[#888888] mb-1">
+                      <label htmlFor="checkout-card-cvc" className="block text-[10px] uppercase tracking-wider text-[#888888] mb-1">
                         CVC
                       </label>
                       <input
+                        id="checkout-card-cvc"
                         type="text"
                         name="cardCvc"
+                        autoComplete="cc-csc"
                         value={formData.cardCvc}
                         onChange={handleInputChange}
                         className="w-full bg-[#1A1A1A] border border-[#333333] px-3.5 py-2.5 text-sm font-mono text-[#FBF9F9] outline-none"
@@ -502,7 +528,7 @@ function CheckoutContent() {
           {/* Right Column: Order Summary & Luxury Guarantee (5 Cols) */}
           <section className="lg:col-span-5 space-y-6">
             <div className="bg-[#141414] border border-[#262626] p-6 lg:sticky lg:top-28">
-              <h2 className="font-serif text-sm uppercase tracking-[0.2em] text-[#D4AF37] border-b border-[#222222] pb-4 mb-6">
+              <h2 suppressHydrationWarning className="font-serif text-sm uppercase tracking-[0.2em] text-[#D4AF37] border-b border-[#222222] pb-4 mb-6">
                 Curated Selection ({cartItems.reduce((acc, i) => acc + i.quantity, 0)} Items)
               </h2>
 

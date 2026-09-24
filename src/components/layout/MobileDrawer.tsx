@@ -156,7 +156,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
               data-testid="mobile-drawer-cart-btn"
             >
               <ShoppingBag className="w-4 h-4 stroke-[1.5]" />
-              <span>VIEW SHOPPING BAG ({cartCount})</span>
+              <span suppressHydrationWarning>VIEW SHOPPING BAG ({cartCount})</span>
               {cartCount > 0 && (
                 <span className="w-2 h-2 bg-[#D4AF37] rounded-full" />
               )}

@@ -152,10 +152,14 @@ export const SearchPalette: React.FC<SearchPaletteProps> = ({
           <Search className="w-4 h-4 text-[#D4AF37] shrink-0 mr-3" />
           <input
             ref={inputRef}
-            type="text"
+            id="catalog-search-input"
+            name="search"
+            type="search"
+            autoComplete="off"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search silhouettes, virgin wool, silk, outerwear..."
+            aria-label="Search catalog"
             className="w-full bg-transparent text-sm text-[#FBF9F9] placeholder-[#555555] outline-none font-sans"
           />
           {query && (
