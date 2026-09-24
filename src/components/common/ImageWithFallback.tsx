@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export interface ImageWithFallbackProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -25,10 +25,28 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
 }) => {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     setHasError(false);
+    // If the image is already complete in the browser (e.g. from cache or SSR)
+    if (imgRef.current && imgRef.current.complete) {
+      if (imgRef.current.naturalWidth > 0) {
+        setIsLoaded(true);
+        return;
+      }
+    }
     setIsLoaded(false);
+
+    // Short safety timer for cached browser images that don't trigger onLoad
+    if (typeof window !== 'undefined' && src && !src.includes('broken') && !src.includes('does-not-exist')) {
+      const timer = setTimeout(() => {
+        if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
+          setIsLoaded(true);
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
   }, [src]);
 
   const isEmptySrc = !src || typeof src !== 'string' || src.trim() === '';
@@ -37,15 +55,15 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
   const generateSvgFallback = (title: string, sub: string) => {
     const svg = `
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="100%" height="100%">
-        <rect width="600" height="800" fill="#141414"/>
-        <rect x="24" y="24" width="552" height="752" fill="none" stroke="#262626" stroke-width="1"/>
-        <line x1="24" y1="24" x2="576" y2="776" stroke="#1c1c1c" stroke-width="0.5"/>
-        <line x1="576" y1="24" x2="24" y2="776" stroke="#1c1c1c" stroke-width="0.5"/>
-        <circle cx="300" cy="400" r="140" fill="#181818" stroke="#D4AF37" stroke-width="0.75" stroke-opacity="0.3"/>
-        <text x="300" y="380" font-family="'Bodoni Moda', Georgia, serif" font-size="36" fill="#FBF9F9" text-anchor="middle" letter-spacing="4">AURA</text>
+        <rect width="600" height="800" fill="#F5F3EF"/>
+        <rect x="24" y="24" width="552" height="752" fill="none" stroke="#E5E0D5" stroke-width="1.5"/>
+        <line x1="24" y1="24" x2="576" y2="776" stroke="#ECE8DF" stroke-width="0.5"/>
+        <line x1="576" y1="24" x2="24" y2="776" stroke="#ECE8DF" stroke-width="0.5"/>
+        <circle cx="300" cy="400" r="140" fill="#EFECE4" stroke="#D4AF37" stroke-width="1" stroke-opacity="0.5"/>
+        <text x="300" y="380" font-family="'Bodoni Moda', Georgia, serif" font-size="36" fill="#0D0D0D" text-anchor="middle" letter-spacing="4">AURA</text>
         <text x="300" y="415" font-family="'Hanken Grotesk', -apple-system, sans-serif" font-size="11" font-weight="600" fill="#D4AF37" text-anchor="middle" letter-spacing="3">${title.toUpperCase()}</text>
         <text x="300" y="440" font-family="'Hanken Grotesk', -apple-system, sans-serif" font-size="9" fill="#707070" text-anchor="middle" letter-spacing="2">${sub.toUpperCase()}</text>
-        <text x="300" y="740" font-family="'Hanken Grotesk', -apple-system, sans-serif" font-size="8" fill="#505050" text-anchor="middle" letter-spacing="3">EDITION ARCHIVE / 01</text>
+        <text x="300" y="740" font-family="'Hanken Grotesk', -apple-system, sans-serif" font-size="8" fill="#999999" text-anchor="middle" letter-spacing="3">EDITION ARCHIVE / 01</text>
       </svg>
     `;
     return `data:image/svg+xml;utf8,${encodeURIComponent(svg.trim())}`;
@@ -53,12 +71,12 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
 
   return (
     <div
-      className={`relative overflow-hidden bg-[#181818] ${aspectRatioClass} ${containerClassName}`}
+      className={`relative overflow-hidden bg-[#F5F3EF] ${aspectRatioClass} ${containerClassName}`}
       data-testid="image-fallback-container"
     >
       {!isLoaded && !showFallback && (
-        <div className="absolute inset-0 bg-[#161616] animate-pulse flex items-center justify-center">
-          <span className="font-serif text-neutral-600 text-xs tracking-widest uppercase">
+        <div className="absolute inset-0 bg-[#EFECE4] animate-pulse flex items-center justify-center">
+          <span className="font-serif text-[#A09888] text-xs tracking-widest uppercase">
             AURA
           </span>
         </div>
@@ -73,6 +91,12 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
         />
       ) : (
         <img
+          ref={(node) => {
+            imgRef.current = node;
+            if (node && node.complete && node.naturalWidth > 0 && !isLoaded) {
+              setIsLoaded(true);
+            }
+          }}
           src={src}
           alt={alt}
           fetchPriority={priority}

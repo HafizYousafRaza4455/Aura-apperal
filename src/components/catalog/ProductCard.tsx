@@ -95,7 +95,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       className={`group relative flex flex-col cursor-pointer overflow-hidden rounded-none border border-[#E5E5E5] bg-white transition-colors duration-300 hover:border-[#0D0D0D] focus:outline-none focus:ring-1 focus:ring-[#0D0D0D] select-none ${className}`}
     >
       {/* 1. 3:4 Portrait Editorial Media Container */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#181818]">
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#F5F3EF]">
         {/* Primary Image with 1.05x Subtle Zoom */}
         <ImageWithFallback
           src={primaryImage}

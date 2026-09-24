@@ -9,8 +9,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
     }
 
-    // 1. Check Demo Accounts First for fast testing
-    const demoUser = DEMO_USERS[email.toLowerCase().trim()];
+    // 1. Check Demo Accounts (Restricted to non-production or explicit demo opt-in)
+    const isDemoAllowed =
+      process.env.NODE_ENV !== 'production' || process.env.ENABLE_DEMO_ACCOUNTS === 'true';
+
+    const demoUser = isDemoAllowed ? DEMO_USERS[email.toLowerCase().trim()] : null;
     let user = null;
 
     if (demoUser && demoUser.password === password) {
@@ -21,20 +24,36 @@ export async function POST(request: Request) {
         role: demoUser.role,
       };
     } else {
-      // 2. Check PostgreSQL via Prisma if available
+      // 2. Check PostgreSQL via Prisma with secure bcrypt password verification
       try {
         const { prisma } = await import('../../../../lib/prisma');
         const dbUser = await prisma.user.findUnique({
           where: { email: email.toLowerCase().trim() },
         });
+
         if (dbUser) {
-          // For demo, accept password or compare hash
-          user = {
-            id: dbUser.id,
-            email: dbUser.email,
-            name: dbUser.name || undefined,
-            role: dbUser.role,
-          };
+          let isPasswordValid = false;
+
+          if (dbUser.passwordHash) {
+            try {
+              const bcrypt = await import('bcryptjs');
+              isPasswordValid = await bcrypt.compare(password, dbUser.passwordHash);
+            } catch {
+              isPasswordValid = dbUser.passwordHash === password;
+            }
+          } else if (isDemoAllowed) {
+            // Unset hash only permitted in local dev/demo
+            isPasswordValid = true;
+          }
+
+          if (isPasswordValid) {
+            user = {
+              id: dbUser.id,
+              email: dbUser.email,
+              name: dbUser.name || undefined,
+              role: dbUser.role,
+            };
+          }
         }
       } catch (e) {
         // DB not connected, fallback

@@ -20,6 +20,15 @@ function getClientIp(req: NextRequest): string {
   return req.headers.get('x-real-ip') || '127.0.0.1';
 }
 
+function constantTimeCompare(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return result === 0;
+}
+
 /** Check if client is locked out */
 async function checkLockout(ip: string): Promise<{ locked: boolean; remainingSeconds: number; attempts: number }> {
   // Check Redis if available
@@ -146,9 +155,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Validate Password
+    // 2. Validate Password with timing-attack resistant comparison
     const trimmedInput = password.trim();
-    if (trimmedInput !== ADMIN_MASTER_PASSWORD && password !== ADMIN_MASTER_PASSWORD) {
+    const isPasswordValid =
+      constantTimeCompare(trimmedInput, ADMIN_MASTER_PASSWORD) ||
+      constantTimeCompare(password, ADMIN_MASTER_PASSWORD);
+
+    if (!isPasswordValid) {
       const failure = await recordFailure(ip);
 
       return NextResponse.json(

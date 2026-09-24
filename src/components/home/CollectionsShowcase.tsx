@@ -103,7 +103,7 @@ export const CollectionsShowcase: React.FC<CollectionsShowcaseProps> = ({
               data-testid={`collection-card-${col.id}`}
             >
               {/* Image Container with Exact 1.03x Scale Zoom */}
-              <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#181818]">
+              <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#F5F3EF]">
                 <ImageWithFallback
                   src={col.image}
                   alt={col.alt}

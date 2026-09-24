@@ -32,12 +32,31 @@ async function getProducts(): Promise<Product[]> {
           details: p.details,
           featured: p.featured,
           stock: totalStock,
-          colors: p.colors.map((c) => ({
-            name: c.name,
-            hex: c.hex,
-            image: c.image,
-            secondaryImage: c.secondaryImage || c.image,
-          })),
+          colors: p.colors && p.colors.length > 0
+            ? p.colors.map((c) => {
+                const fallbackProd = PRODUCTS.find((prod) => prod.id === p.id);
+                const fallbackColor = fallbackProd?.colors.find((fc) => fc.name === c.name) || fallbackProd?.colors[0];
+                const validImg = c.image && typeof c.image === 'string' && c.image.trim() !== ''
+                  ? c.image
+                  : fallbackColor?.image || 'https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=1000&auto=format&fit=crop';
+                const validSecondary = c.secondaryImage && typeof c.secondaryImage === 'string' && c.secondaryImage.trim() !== ''
+                  ? c.secondaryImage
+                  : fallbackColor?.secondaryImage || validImg;
+                return {
+                  name: c.name,
+                  hex: c.hex || '#0D0D0D',
+                  image: validImg,
+                  secondaryImage: validSecondary,
+                };
+              })
+            : (PRODUCTS.find((prod) => prod.id === p.id)?.colors || [
+                {
+                  name: 'Obsidian Black',
+                  hex: '#0D0D0D',
+                  image: 'https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=1000&auto=format&fit=crop',
+                  secondaryImage: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1000&auto=format&fit=crop',
+                },
+              ]),
           sizes: Array.from(new Set(p.variants.map((v) => v.size.replace('_', ' ')))),
         };
       });

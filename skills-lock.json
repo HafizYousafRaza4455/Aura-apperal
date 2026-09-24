@@ -145,6 +145,12 @@
       "skillPath": "skills/test-driven-development/SKILL.md",
       "computedHash": "a8fef2b010af8402fd2979bdb2e5e39e5baa1ca14b5cdec366ee75df5e1dec68"
     },
+    "typesafe-ai": {
+      "source": "typesafe-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/typesafe-ai/SKILL.md",
+      "computedHash": "a6ed7d8a3d2b2d962f8e44b17663767c433b7d1fc32d1ed0349a44f7372513e8"
+    },
     "using-agent-skills": {
       "source": "addyosmani/agent-skills",
       "sourceType": "github",

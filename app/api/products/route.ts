@@ -41,7 +41,22 @@ export async function GET(request: Request) {
         details: p.details,
         featured: p.featured,
         stock: p.variants.reduce((acc, v) => acc + (v.inventory?.stock ?? 0), 0),
-        colors: p.colors,
+        colors: p.colors && p.colors.length > 0
+          ? p.colors.map((c) => {
+              const fallbackProd = PRODUCTS.find((prod) => prod.id === p.id);
+              const fallbackColor = fallbackProd?.colors.find((fc) => fc.name === c.name) || fallbackProd?.colors[0];
+              const validImg = c.image && typeof c.image === 'string' && c.image.trim() !== ''
+                ? c.image
+                : fallbackColor?.image || 'https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=1000&auto=format&fit=crop';
+              return {
+                id: c.id,
+                name: c.name,
+                hex: c.hex || '#0D0D0D',
+                image: validImg,
+                secondaryImage: c.secondaryImage || fallbackColor?.secondaryImage || validImg,
+              };
+            })
+          : (PRODUCTS.find((prod) => prod.id === p.id)?.colors || []),
         sizes: Array.from(new Set(p.variants.map((v) => v.size))),
       }));
       return NextResponse.json({ products: formatted });
