@@ -54,6 +54,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   const [activeImageIndex, setActiveImageIndex] = useState(0); // 0 = primary, 1 = secondary
   const [validationError, setValidationError] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // 2. Accessibility & DOM Refs
   const modalCardRef = useRef<HTMLDivElement>(null);
@@ -233,7 +238,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   const availableSizes =
     product.sizes && product.sizes.length > 0 ? product.sizes : ['XS', 'S', 'M', 'L', 'XL'];
 
-  if (typeof document === 'undefined' || !isOpen || !product) {
+  if (!mounted || typeof document === 'undefined' || !isOpen || !product) {
     return null;
   }
 

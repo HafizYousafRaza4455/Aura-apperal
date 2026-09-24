@@ -50,7 +50,12 @@ export const SearchPalette: React.FC<SearchPaletteProps> = ({
   const [facets, setFacets] = useState<SearchFacets | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Perform search with debounce via REST API
   const runSearch = useCallback(async (q: string, cat: string) => {
@@ -129,7 +134,7 @@ export const SearchPalette: React.FC<SearchPaletteProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose, onSelectProduct, results, selectedIndex]);
 
-  if (typeof document === 'undefined' || !isOpen) {
+  if (!mounted || typeof document === 'undefined' || !isOpen) {
     return null;
   }
 
