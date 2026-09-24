@@ -51,6 +51,16 @@ export interface CheckoutSessionResult {
 export async function createCheckoutSession(
   params: CreateCheckoutSessionParams
 ): Promise<CheckoutSessionResult> {
+  if (!params.items || !Array.isArray(params.items) || params.items.length === 0) {
+    throw new Error('Checkout session requires at least one item');
+  }
+
+  for (const item of params.items) {
+    if (typeof item.amount !== 'number' || item.amount <= 0 || isNaN(item.amount)) {
+      throw new Error(`Invalid item amount: ${item.amount}. Price must be greater than zero.`);
+    }
+  }
+
   if (stripe && isStripeConfigured()) {
     try {
       const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = params.items.map((item) => ({
@@ -86,8 +96,16 @@ export async function createCheckoutSession(
         isMock: false,
       };
     } catch (err) {
+      if (process.env.NODE_ENV === 'production') {
+        console.error('Stripe checkout session creation failed in production:', err);
+        throw err;
+      }
       console.warn('Stripe checkout session creation failed, using mock fallback:', err);
     }
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('Stripe is not configured in production. Mock checkout sessions are forbidden in production.');
   }
 
   // Graceful development/test mock session

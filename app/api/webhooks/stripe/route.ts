@@ -4,7 +4,16 @@ import { finalizeOrder, releaseHold } from '@/../lib/inventory-reservation';
 import { redis } from '@/../lib/redis';
 
 export async function POST(req: NextRequest) {
+  const isProduction = process.env.NODE_ENV === 'production';
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (isProduction && (!webhookSecret || !stripe)) {
+    console.error('Stripe webhook error: STRIPE_WEBHOOK_SECRET and Stripe client must be configured in production.');
+    return NextResponse.json(
+      { error: 'Webhook configuration error: Unsigned webhooks disabled in production' },
+      { status: 500 }
+    );
+  }
 
   try {
     const rawBody = await req.text();
@@ -22,13 +31,19 @@ export async function POST(req: NextRequest) {
         console.error('Webhook signature verification failed:', err.message);
         return NextResponse.json({ error: 'Invalid webhook signature' }, { status: 400 });
       }
-    } else {
+    } else if (!isProduction) {
       // In development / test mode without active webhook secret
       try {
         event = JSON.parse(rawBody);
       } catch {
         return NextResponse.json({ error: 'Invalid JSON payload' }, { status: 400 });
       }
+    } else {
+      // Fail-closed in production
+      return NextResponse.json(
+        { error: 'Unsigned webhook requests are strictly forbidden in production' },
+        { status: 400 }
+      );
     }
 
     // 1. Idempotency Check via Redis

@@ -4,6 +4,7 @@ import path from 'node:path';
 const nextConfig: NextConfig = {
   outputFileTracingRoot: path.resolve(__dirname),
   reactStrictMode: true,
+  poweredByHeader: false,
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
@@ -14,6 +15,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
       },
     ],
   },
