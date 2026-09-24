@@ -40,43 +40,41 @@ function calculateTotals(items: CartItem[], promoCode?: string): CartTotals {
 }
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Initialize state directly from localStorage to prevent re-render cascades
-  const [items, setItems] = useState<CartItem[]>(() => {
-    if (typeof window === 'undefined') return [];
-    try {
-      const stored = localStorage.getItem('cartState');
-      if (stored) {
-        const parsed = JSON.parse(stored) as { items?: CartItem[] };
-        return Array.isArray(parsed.items) ? parsed.items : [];
-      }
-    } catch (_) {}
-    return [];
-  });
+  // Initialize state with SSR-safe defaults to ensure 100% hydration match
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [promoCode, setPromoCode] = useState<string | undefined>(undefined);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const [promoCode, setPromoCode] = useState<string | undefined>(() => {
-    if (typeof window === 'undefined') return undefined;
+  // Hydrate from localStorage once mounted on client
+  useEffect(() => {
     try {
       const stored = localStorage.getItem('cartState');
       if (stored) {
-        const parsed = JSON.parse(stored) as { promoCode?: string };
-        return parsed.promoCode;
+        const parsed = JSON.parse(stored) as { items?: CartItem[]; promoCode?: string };
+        if (Array.isArray(parsed.items) && parsed.items.length > 0) {
+          setItems(parsed.items);
+        }
+        if (parsed.promoCode) {
+          setPromoCode(parsed.promoCode);
+        }
       }
     } catch (_) {}
-    return undefined;
-  });
+    setIsLoaded(true);
+  }, []);
 
   // Calculate totals purely as derived state via useMemo
   const totals = useMemo(() => {
     return calculateTotals(items, promoCode);
   }, [items, promoCode]);
 
-  // Sync state to localStorage on modification
+  // Sync state to localStorage on modification only after initial mount
   useEffect(() => {
+    if (!isLoaded) return;
     try {
       const state = JSON.stringify({ items, promoCode });
       localStorage.setItem('cartState', state);
     } catch (_) {}
-  }, [items, promoCode]);
+  }, [items, promoCode, isLoaded]);
 
   // Sync cross-tab changes (native browser 'storage' event only fires in other tabs)
   useEffect(() => {

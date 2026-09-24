@@ -159,31 +159,30 @@ const SEED_ORDERS: Order[] = [
 export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
 
-  // Products state backed by localStorage
-  const [products, setProducts] = useState<Product[]>(() => {
-    if (typeof window === 'undefined') return INITIAL_PRODUCTS;
-    try {
-      const stored = localStorage.getItem('aura_admin_products');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (_) {}
-    return INITIAL_PRODUCTS;
-  });
+  // Products state - initialized with static defaults to ensure 100% SSR match
+  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
 
-  // Orders state backed by localStorage
-  const [orders, setOrders] = useState<Order[]>(() => {
-    if (typeof window === 'undefined') return SEED_ORDERS;
+  // Orders state - initialized with static defaults to ensure 100% SSR match
+  const [orders, setOrders] = useState<Order[]>(SEED_ORDERS);
+
+  // Synchronize from localStorage only after initial client mount
+  useEffect(() => {
     try {
-      const stored = localStorage.getItem('aura_admin_orders');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      const storedProducts = localStorage.getItem('aura_admin_products');
+      if (storedProducts) {
+        const parsed = JSON.parse(storedProducts);
+        if (Array.isArray(parsed) && parsed.length > 0) setProducts(parsed);
       }
     } catch (_) {}
-    return SEED_ORDERS;
-  });
+
+    try {
+      const storedOrders = localStorage.getItem('aura_admin_orders');
+      if (storedOrders) {
+        const parsed = JSON.parse(storedOrders);
+        if (Array.isArray(parsed) && parsed.length > 0) setOrders(parsed);
+      }
+    } catch (_) {}
+  }, []);
 
   useEffect(() => {
     try {
