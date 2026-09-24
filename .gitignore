@@ -1,0 +1,29 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+/dist
+
+# environment variables
+.env
+.env*.local
+
+# vercel
+.vercel
+
+# typescript cache
+*.tsbuildinfo
+
+# OS generated files
+.DS_Store
+Thumbs.db

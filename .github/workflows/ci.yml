@@ -1,0 +1,42 @@
+name: Aura Apparel Production CI/CD
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Test & Build Quality Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Execute Full Vitest Regression Suite (268 Tests)
+        run: npm run test
+
+      - name: Compile Next.js 15 Production Build
+        run: npm run build
+        env:
+          NEXTAUTH_SECRET: 'aura_production_ci_secret_32_bytes_long_key_sample'
+          STRIPE_SECRET_KEY: 'sk_test_ci_mock_placeholder'

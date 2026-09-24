@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  /* Core Luxury Palette Tokens */
+  --color-obsidian: #0D0D0D;
+  --color-pale-gold: #D4AF37;
+  --color-cloud-white: #FBF9F9;
+  --color-surface-low: #F5F5F3;
+  --color-surface-white: #FFFFFF;
+  --color-slate-grey: #707070;
+  --color-border-subtle: #E5E5E5;
+  --color-border-dark: #1F1F1F;
+  --color-error: #BA1A1A;
+
+  /* Display & Body Typography */
+  --font-serif: "Cormorant Garamond", "Bodoni Moda", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", "Plus Jakarta Sans", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Luxury Ease Curve */
+  --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  /* Strict 0px Border Geometry Across All Elements */
+  *, ::before, ::after {
+    border-radius: 0px !important;
+  }
+
+  /* Zero Drop Shadows - Pure Flat Architectural Layering */
+  *, ::before, ::after {
+    box-shadow: none !important;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body {
+    background-color: var(--color-cloud-white);
+    color: var(--color-obsidian);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    letter-spacing: -0.01em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.015em;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+
+  .font-nav {
+    font-family: var(--font-sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .border-luxury-subtle {
+    border-color: var(--color-border-subtle);
+  }
+
+  .border-luxury-gold {
+    border-color: var(--color-pale-gold);
+  }
+}
